@@ -15,6 +15,11 @@ public class StartGameAction implements MenuAction {
 
     @Override
     public void execute() {
-        // To be implemented
+        System.out.print("Home team: ");
+        String home = scanner.nextLine().trim();
+        System.out.print("Away team: ");
+        String away = scanner.nextLine().trim();
+        facade.startGame(home, away);
+        System.out.println("Game started: " + home + " vs " + away);
     }
 }
