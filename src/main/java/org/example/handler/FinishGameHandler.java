@@ -1,5 +1,6 @@
 package org.example.handler;
 
+import org.example.exception.MatchNotFoundException;
 import org.example.repository.MatchRepository;
 
 public class FinishGameHandler {
@@ -12,9 +13,9 @@ public class FinishGameHandler {
 
     public void handle(String home, String away) {
         repository.find(home, away)
-                .ifPresent(repository::remove);
+                .ifPresentOrElse(
+                        repository::remove,
+                        () -> { throw new MatchNotFoundException(home, away); }
+                );
     }
-
-
-
 }
