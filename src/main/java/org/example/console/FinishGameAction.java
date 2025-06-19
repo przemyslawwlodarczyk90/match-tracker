@@ -14,6 +14,11 @@ public class FinishGameAction implements MenuAction {
 
     @Override
     public void execute() {
-        // To be implemented
+        System.out.print("Home team: ");
+        String home = scanner.nextLine().trim();
+        System.out.print("Away team: ");
+        String away = scanner.nextLine().trim();
+        facade.finishGame(home, away);
+        System.out.println("Game finished: " + home + " vs " + away);
     }
 }
