@@ -11,6 +11,10 @@ public class FinishGameHandler {
     }
 
     public void handle(String home, String away) {
-
+        repository.find(home, away)
+                .ifPresent(repository::remove);
     }
+
+
+
 }
