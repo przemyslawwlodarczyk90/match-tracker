@@ -35,7 +35,7 @@ class UpdateScoreActionTest {
         repository.add(match);
         ScoreBoardFacade facade = new ScoreBoardFacade(repository);
 
-        // Menu: wybierz mecz nr 1, wpisz nowe wyniki
+
         String userInput = "1\n3\n2\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         Scanner scanner = new Scanner(inputStream);
@@ -54,7 +54,7 @@ class UpdateScoreActionTest {
                 .contains("New away score:")
                 .contains("Score updated for England vs Poland");
 
-        // Sprawdzamy też stan repozytorium
+
         Match updated = repository.find("England", "Poland").orElseThrow();
         assertThat(updated.getHomeScore()).isEqualTo(3);
         assertThat(updated.getAwayScore()).isEqualTo(2);
