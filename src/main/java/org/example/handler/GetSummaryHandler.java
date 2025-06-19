@@ -14,6 +14,8 @@ public class GetSummaryHandler {
     }
 
     public List<Match> handle() {
-        return List.of();
+        return repository.findAll().stream()
+                .sorted(new MatchSummaryComparator())
+                .toList();
     }
 }
