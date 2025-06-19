@@ -46,5 +46,5 @@ class StartGameActionTest {
                 .contains("Home team:")
                 .contains("Away team:")
                 .contains("Game started: England vs Poland");
-    }
+     }
 }
