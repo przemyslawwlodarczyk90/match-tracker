@@ -1,5 +1,6 @@
 package org.example.handler;
 
+import org.example.exception.MatchNotFoundException;
 import org.example.repository.MatchRepository;
 
 public class UpdateScoreHandler {
@@ -16,7 +17,7 @@ public class UpdateScoreHandler {
                     match.setHomeScore(homeScore);
                     match.setAwayScore(awayScore);
                 }, () -> {
-                    throw new IllegalArgumentException("Match " + home + " vs " + away + " not found");
+                    throw new MatchNotFoundException(home, away);
                 });
     }
 }

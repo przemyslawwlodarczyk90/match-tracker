@@ -8,11 +8,16 @@ public class Match {
     private final String awayTeam;
     private int homeScore = 0;
     private int awayScore = 0;
-    private final LocalDateTime startTime = LocalDateTime.now();
+    private final LocalDateTime startTime;
 
-    public Match(String homeTeam, String awayTeam) {
+    public Match(String homeTeam, String awayTeam, LocalDateTime startTime) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
+        this.startTime = startTime;
+    }
+
+    public Match(String homeTeam, String awayTeam) {
+        this(homeTeam, awayTeam, LocalDateTime.now());
     }
 
     public String getHomeTeam() {
@@ -47,7 +52,10 @@ public class Match {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Match match = (Match) o;
-        return homeScore == match.homeScore && awayScore == match.awayScore && Objects.equals(homeTeam, match.homeTeam) && Objects.equals(awayTeam, match.awayTeam) && Objects.equals(startTime, match.startTime);
+        return homeScore == match.homeScore && awayScore == match.awayScore &&
+                Objects.equals(homeTeam, match.homeTeam) &&
+                Objects.equals(awayTeam, match.awayTeam) &&
+                Objects.equals(startTime, match.startTime);
     }
 
     @Override

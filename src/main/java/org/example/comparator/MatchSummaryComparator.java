@@ -10,11 +10,11 @@ public class MatchSummaryComparator implements Comparator<Match> {
         int totalScore1 = m1.getHomeScore() + m1.getAwayScore();
         int totalScore2 = m2.getHomeScore() + m2.getAwayScore();
 
-        int scoreComparison = Integer.compare(totalScore2, totalScore1); // descending
+        int scoreComparison = Integer.compare(totalScore2, totalScore1);
         if (scoreComparison != 0) {
             return scoreComparison;
         }
 
-        return m2.getStartTime().compareTo(m1.getStartTime()); // most recent first
+        return m2.getStartTime().compareTo(m1.getStartTime());
     }
 }

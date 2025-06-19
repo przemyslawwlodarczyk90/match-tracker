@@ -4,9 +4,10 @@ import org.example.model.Match;
 import org.example.repository.InMemoryMatchRepository;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ScoreBoardFacadeTest {
 
@@ -17,12 +18,15 @@ class ScoreBoardFacadeTest {
         facade.startGame("Spain", "Brazil");
 
         List<Match> summary = facade.getSummary();
-        assertEquals(1, summary.size());
-        Match match = summary.getFirst();
-        assertEquals("Spain", match.getHomeTeam());
-        assertEquals("Brazil", match.getAwayTeam());
-        assertEquals(0, match.getHomeScore());
-        assertEquals(0, match.getAwayScore());
+
+        assertThat(summary).hasSize(1)
+                .first()
+                .satisfies(match -> {
+                    assertThat(match.getHomeTeam()).isEqualTo("Spain");
+                    assertThat(match.getAwayTeam()).isEqualTo("Brazil");
+                    assertThat(match.getHomeScore()).isZero();
+                    assertThat(match.getAwayScore()).isZero();
+                });
     }
 
     @Test
@@ -33,8 +37,8 @@ class ScoreBoardFacadeTest {
         facade.updateScore("Germany", "France", 3, 2);
 
         Match match = facade.getSummary().getFirst();
-        assertEquals(3, match.getHomeScore());
-        assertEquals(2, match.getAwayScore());
+        assertThat(match.getHomeScore()).isEqualTo(3);
+        assertThat(match.getAwayScore()).isEqualTo(2);
     }
 
     @Test
@@ -44,22 +48,26 @@ class ScoreBoardFacadeTest {
 
         facade.finishGame("Italy", "Argentina");
 
-        assertTrue(facade.getSummary().isEmpty());
+        assertThat(facade.getSummary()).isEmpty();
     }
-    @Test
-    void shouldReturnMatchesSortedByScoreAndTime() throws InterruptedException {
-        ScoreBoardFacade facade = new ScoreBoardFacade(new InMemoryMatchRepository());
 
-        facade.startGame("Team A", "Team B");
-        Thread.sleep(10);
-        facade.startGame("Team C", "Team D");
+    @Test
+    void shouldReturnMatchesSortedByScoreAndTime() {
+        InMemoryMatchRepository repository = new InMemoryMatchRepository();
+        ScoreBoardFacade facade = new ScoreBoardFacade(repository);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        repository.add(new Match("Team A", "Team B", now));
+        repository.add(new Match("Team C", "Team D", now.plusSeconds(1)));
 
         facade.updateScore("Team A", "Team B", 1, 1); // total: 2
         facade.updateScore("Team C", "Team D", 3, 3); // total: 6
 
         List<Match> summary = facade.getSummary();
 
-        assertEquals("Team C", summary.get(0).getHomeTeam());
-        assertEquals("Team A", summary.get(1).getHomeTeam());
+        assertThat(summary)
+                .extracting(Match::getHomeTeam)
+                .containsExactly("Team C", "Team A");
     }
 }
