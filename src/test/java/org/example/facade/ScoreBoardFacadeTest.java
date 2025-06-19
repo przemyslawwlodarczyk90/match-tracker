@@ -46,4 +46,20 @@ class ScoreBoardFacadeTest {
 
         assertTrue(facade.getSummary().isEmpty());
     }
+    @Test
+    void shouldReturnMatchesSortedByScoreAndTime() throws InterruptedException {
+        ScoreBoardFacade facade = new ScoreBoardFacade(new InMemoryMatchRepository());
+
+        facade.startGame("Team A", "Team B");
+        Thread.sleep(10);
+        facade.startGame("Team C", "Team D");
+
+        facade.updateScore("Team A", "Team B", 1, 1); // total: 2
+        facade.updateScore("Team C", "Team D", 3, 3); // total: 6
+
+        List<Match> summary = facade.getSummary();
+
+        assertEquals("Team C", summary.get(0).getHomeTeam());
+        assertEquals("Team A", summary.get(1).getHomeTeam());
+    }
 }
