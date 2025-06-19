@@ -1,5 +1,6 @@
 package org.example.handler;
 
+import org.example.exception.DuplicateMatchException;
 import org.example.model.Match;
 import org.example.repository.InMemoryMatchRepository;
 import org.junit.jupiter.api.Test;
@@ -32,5 +33,16 @@ class StartGameHandlerTest {
         assertEquals(awayTeam, match.get().getAwayTeam());
         assertEquals(0, match.get().getHomeScore());
         assertEquals(0, match.get().getAwayScore());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenMatchAlreadyExists() {
+        // given
+        InMemoryMatchRepository repository = new InMemoryMatchRepository();
+        repository.add(new Match("Spain", "Brazil"));
+        StartGameHandler handler = new StartGameHandler(repository);
+
+        // when + then
+        assertThrows(DuplicateMatchException.class, () -> handler.handle("Spain", "Brazil"));
     }
 }
