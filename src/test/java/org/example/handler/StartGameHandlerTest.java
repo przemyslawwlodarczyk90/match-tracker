@@ -5,10 +5,8 @@ import org.example.model.Match;
 import org.example.repository.InMemoryMatchRepository;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class StartGameHandlerTest {
 
@@ -24,15 +22,16 @@ class StartGameHandlerTest {
         handler.handle(homeTeam, awayTeam);
 
         // then
-        List<Match> allMatches = repository.findAll();
-        assertEquals(1, allMatches.size(), "Repository should contain exactly one match");
+        assertThat(repository.findAll()).hasSize(1)
+                .first()
+                .satisfies(match -> {
+                    assertThat(match.getHomeTeam()).isEqualTo(homeTeam);
+                    assertThat(match.getAwayTeam()).isEqualTo(awayTeam);
+                    assertThat(match.getHomeScore()).isZero();
+                    assertThat(match.getAwayScore()).isZero();
+                });
 
-        Optional<Match> match = repository.find(homeTeam, awayTeam);
-        assertTrue(match.isPresent(), "Expected match to be present in repository");
-        assertEquals(homeTeam, match.get().getHomeTeam());
-        assertEquals(awayTeam, match.get().getAwayTeam());
-        assertEquals(0, match.get().getHomeScore());
-        assertEquals(0, match.get().getAwayScore());
+        assertThat(repository.find(homeTeam, awayTeam)).isPresent();
     }
 
     @Test
@@ -43,6 +42,8 @@ class StartGameHandlerTest {
         StartGameHandler handler = new StartGameHandler(repository);
 
         // when + then
-        assertThrows(DuplicateMatchException.class, () -> handler.handle("Spain", "Brazil"));
+        assertThatThrownBy(() -> handler.handle("Spain", "Brazil"))
+                .isInstanceOf(DuplicateMatchException.class)
+                .hasMessage("Match already exists: Spain vs Brazil");
     }
 }
