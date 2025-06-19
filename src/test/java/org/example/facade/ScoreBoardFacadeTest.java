@@ -36,4 +36,14 @@ class ScoreBoardFacadeTest {
         assertEquals(3, match.getHomeScore());
         assertEquals(2, match.getAwayScore());
     }
+
+    @Test
+    void shouldRemoveMatchAfterFinishGame() {
+        ScoreBoardFacade facade = new ScoreBoardFacade(new InMemoryMatchRepository());
+        facade.startGame("Italy", "Argentina");
+
+        facade.finishGame("Italy", "Argentina");
+
+        assertTrue(facade.getSummary().isEmpty());
+    }
 }
