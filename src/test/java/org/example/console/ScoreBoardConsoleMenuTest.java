@@ -33,7 +33,7 @@ class ScoreBoardConsoleMenuTest {
         sb.append("1\nEngland\nPoland\n");      // Start game
         sb.append("2\n1\n2\n3\n");              // Update score
         sb.append("4\n");                       // Show summary
-        sb.append("3\nEngland\nPoland\n");      // Finish game
+        sb.append("3\n1\n");                    // Finish game (wybieramy numer)
         sb.append("4\n");                       // Show summary
         sb.append("5\n");                       // Exit
 
@@ -55,4 +55,5 @@ class ScoreBoardConsoleMenuTest {
                 .contains("No games currently on the scoreboard.")
                 .contains("Bye!");
     }
+
 }

@@ -34,7 +34,7 @@ class FinishGameActionTest {
         repository.add(new Match("Italy", "France"));
         ScoreBoardFacade facade = new ScoreBoardFacade(repository);
 
-        String userInput = "Italy\nFrance\n";
+        String userInput = "1\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         Scanner scanner = new Scanner(inputStream);
 
@@ -46,8 +46,9 @@ class FinishGameActionTest {
         // then
         String output = outputStream.toString();
         assertThat(output)
-                .contains("Home team:")
-                .contains("Away team:")
+                .contains("--- Choose a game to finish ---")
+                .contains("1. Italy 0 - France 0")
+                .contains("Enter game number:")
                 .contains("Game finished: Italy vs France");
 
         assertThat(repository.findAll()).isEmpty();
